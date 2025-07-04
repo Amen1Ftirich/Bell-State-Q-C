@@ -1,0 +1,38 @@
+# By Amen Ftirich
+from qiskit import QuantumCircuit, transpile
+from qiskit.visualization import circuit_drawer, plot_histogram
+from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler
+import matplotlib.pyplot as plt
+
+# 1. Connect to IBM Quantum
+service = QiskitRuntimeService()
+backend = service.backend("ibm_brisbane")
+
+# 2. Build Bell state circuit
+qc = QuantumCircuit(2)
+qc.h(0)
+qc.cx(0, 1)
+qc.measure_all()
+
+# 3. Transpile for hardware
+qc_t = transpile(qc, backend=backend, optimization_level=2)
+
+# 4. Draw the circuit and display it
+fig = circuit_drawer(qc_t, output="mpl", interactive=False, fold=-1)
+fig.show()
+plt.show(block=True)  # ← keeps the window open until you close it
+
+# 5. Run the circuit on real hardware
+sampler = Sampler(mode=backend)
+job = sampler.run([qc_t], shots=1024)
+print("Job ID:", job.job_id())
+
+# 6. Retrieve and display results
+res = job.result()[0]
+counts = res.data.meas.get_counts()
+print("Counts:", counts)
+
+# 7. Plot histogram of results
+hist = plot_histogram(counts, title="Bell State Measurement Results")
+hist.show()
+plt.show(block=True)  # ← keep the histogram visible too
