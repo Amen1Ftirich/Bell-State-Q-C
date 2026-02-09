@@ -4,7 +4,7 @@ from qiskit_aer import Aer
 from qiskit_ibm_runtime import QiskitRuntimeService
 
 token = "NAHUH"
-instance = "crn:v1:bluemix:public:quantum-computing:us-east:a/07c3187e648c42cc89d6cfc1c2c36b9b:02cf699e-389f-46b2-936b-be27c8d9b1b1::"
+instance = "nah"
 
 QiskitRuntimeService.save_account (
     token = token,
